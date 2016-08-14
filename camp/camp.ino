@@ -145,7 +145,7 @@ void loop() {
 
   if (now >= next_alive_flash) {
     flash_color();
-    next_dialog = now + 1000;
+    next_alive_flash = now + 1000;
   }
 
   // start a dialog at INTERVAL
