@@ -9,6 +9,10 @@ bool alive;
 uint8_t team;
 uint8_t rank;
 
+bool showing_rank = false;
+
+
+
 void setup() {
   // prepare randomness with some random reading from an unconnected analog pin
   Serial.begin(9600);
@@ -38,8 +42,6 @@ void select_team(uint8_t newteam) {
   } else if (team == 2) {
     b = 255;
   }
-
-//  flash_color();
 }
 
 void revive_player(uint8_t newrank) {
@@ -47,12 +49,6 @@ void revive_player(uint8_t newrank) {
   rank = newrank;
   flash_color();
 }
-
-void select_color() {
-
-}
-
-bool showing_rank = false;
 
 
 void show_rank() {
@@ -95,7 +91,7 @@ uint32_t next_alive_flash = 0;
 
 // a pulse train of x pulses of pulse length y
 #define PULSES        10
-#define PULSE_LENGTH 500 
+#define PULSE_LENGTH 1000 
 
 void loop() {
   uint32_t now = millis(); // rollover of ~49.7 days ... not gonna happen ;-)
@@ -117,10 +113,12 @@ void loop() {
       // TODO hack to pulse your rank
       
       sending = true;
+      
       for(uint8_t t=0; t<PULSES; t++) {
         badge.ir_send_pulse(PULSE_LENGTH);
         delayMicroseconds(PULSE_LENGTH);
       }
+      
       sending = false;
   
       // schedule the next dialog after interval
