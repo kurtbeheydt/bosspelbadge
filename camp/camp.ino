@@ -8,10 +8,11 @@ uint8_t r = 0, g = 0, b = 0;
 bool alive;
 uint8_t team;
 uint8_t rank;
+int inByte = 0; 
 
 bool showing_rank = false;
-
-
+int start_button_press_time = 0;
+int stop_button_press_time = 0;
 
 void setup() {
   // prepare randomness with some random reading from an unconnected analog pin
@@ -21,8 +22,8 @@ void setup() {
   // select your team color at boot ...
   select_team(2);
 
-   // alive = false;
-  revive_player(random(1,5)); // demo to give a player rank 3
+  alive = false;
+  //select_rank(); 
 
   // ... and allow to show the rank using the button
   badge.on_button_change(show_rank);
@@ -44,12 +45,16 @@ void select_team(uint8_t newteam) {
   }
 }
 
+void select_rank(){
+  // chooses a randon rank
+  revive_player(random(1,6)); 
+}
+
 void revive_player(uint8_t newrank) {
   alive = true;
   rank = newrank;
   flash_color();
 }
-
 
 void show_rank() {
   if( ! badge.button_is_pressed() ) {
@@ -97,8 +102,14 @@ void loop() {
   uint32_t now = millis(); // rollover of ~49.7 days ... not gonna happen ;-)
 
   // TODO listen to serial
-  // 
-  Serial.println("hallo");
+
+  if (Serial.available() > 0) {   
+    inByte = Serial.read();
+    select_rank();
+    Serial.print("new rank ");
+    Serial.println(rank);
+  }
+
 
   if (alive) {
     if (now >= next_alive_flash) {
