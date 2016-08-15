@@ -29,8 +29,8 @@ void setup() {
   badge.on_button_change(show_rank);
   
   // start the IR receiver
-  badge.on_ir_activity(handle_activity);
-  badge.ir_rx_start();
+//  badge.on_ir_activity(handle_activity);
+//  badge.ir_rx_start();
 }
 
 void select_team(uint8_t newteam) {
@@ -101,8 +101,7 @@ uint32_t next_alive_flash = 0;
 void loop() {
   uint32_t now = millis(); // rollover of ~49.7 days ... not gonna happen ;-)
 
-  // TODO listen to serial
-
+  // listen to serial
   if (Serial.available() > 0) {   
     inByte = Serial.read();
     select_rank();
@@ -110,18 +109,17 @@ void loop() {
     Serial.println(rank);
   }
 
-
   if (alive) {
     if (now >= next_alive_flash) {
       flash_color();
       next_alive_flash = now + 1500;
     }
-  
+
+  /*
     // start a dialog at INTERVAL
     if( now >= next_dialog ) {
+ 
       // send an IR pulse train
-  
-      // TODO hack to pulse your rank
       
       sending = true;
       
@@ -146,7 +144,7 @@ void loop() {
       skip_activity = SKIP_ACTIVITY;
       next_dialog = now + INTERVAL;
     }
-  
+  */
     // showing rank on button pressed
     if (showing_rank) {
       for (int count = 0; count < rank; count++) {
